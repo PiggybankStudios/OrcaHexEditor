@@ -1,0 +1,61 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": [
+				"lib/include/*",
+				"build/OrcaHexEditor",
+				"Release/*",
+				"engine/template",
+				"playdate_template",
+				"platform/linux",
+				"platform/osx",
+				"platform/playdate",
+				"platform/web",
+				"platform/win32",
+			],
+			"file_exclude_patterns": [
+				"*.wasm",
+				"*.zip",
+			],
+		},
+		{
+			"path": "lib/include/gylib",
+			"file_exclude_patterns": [
+				"*.sublime-project",
+				"gy_scratch_arenas.cpp",
+			],
+			"folder_exclude_patterns":
+			[
+				"test"
+			],
+			"name": "GyLib",
+		},
+		{
+			"name": "Orca Docs",
+			"path": "lib/include/orca/doc/",
+			"folder_exclude_patterns": [
+				"mkdocs/docs",
+			],
+			/*"file_exclude_patterns": [
+				"*.sublime-project",
+			],*/
+		},
+		{
+			"name": "Orca Headers",
+			"path": "lib/include/orca/src/",
+			/*"file_exclude_patterns": [
+				"README.md",
+				"CMakeLists.txt",
+				"Config.cmake.in",
+				"premake4.lua",
+				"LICENSE.txt",
+			],*/
+			"file_include_patterns":
+			[
+				"*.h"
+			],
+		},
+	]
+}
