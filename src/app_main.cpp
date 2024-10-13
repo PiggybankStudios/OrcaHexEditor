@@ -21,7 +21,7 @@ AppState_t* app = nullptr;
 // +--------------------------------------------------------------+
 // |                   Application Source Files                   |
 // +--------------------------------------------------------------+
-//TODO: Any files we want to include?
+#include "open_file_dialog.cpp"
 
 // +--------------------------------------------------------------+
 // |                           AppInit                            |
@@ -42,6 +42,43 @@ void AppInit()
 void AppUpdateAndRender()
 {
 	MemArena_t* scratch = GetScratchArena();
+	
+	if (KeyPressed(Key_Enter) && KeyDown(Key_Control))
+	{
+		HandleKeyExtended(Key_Enter);
+		// if (!app->openFileDialog.isOpen)
+		// {
+		// 	LaunchOpenFileDialog(&app->openFileDialog, NewStr("D:/gamedev/"), mainHeap);
+		// }
+		// else
+		// {
+		// 	CloseOpenFileDialog(&app->openFileDialog);
+		// }
+		
+		OC_FileDialogDesc_t dialogDesc = {};
+		dialogDesc.kind      = OC_FILE_DIALOG_OPEN;
+		dialogDesc.flags     = OC_FILE_DIALOG_FILES | OC_FILE_DIALOG_MULTIPLE;
+		dialogDesc.title     = ToOcStr8(NewStr("Select a file to open in Hex Editor..."));
+		dialogDesc.okLabel   = ToOcStr8(NewStr("Open"));
+		dialogDesc.startPath = ToOcStr8(NewStr("F:/gamedev/"));
+		OC_ListInit(&dialogDesc.filters.list);
+		OC_Str8ListPush(&platform->ocArena, &dialogDesc.filters, NewStr("*.*"));
+		OC_FileOpenWithDialogResult_t result = OC_FileOpenWithDialog(&platform->ocArena, OC_FILE_ACCESS_READ, OC_FILE_OPEN_NONE, &dialogDesc);
+		if (result.button == OC_FILE_DIALOG_OK)
+		{
+			OC_ListFor(result.selection, selectedFile, oc_file_open_with_dialog_elt, listElt)
+			{
+				PrintLine_I("Selected %u", (u32)selectedFile->file.h);
+				OC_FileClose(selectedFile->file);
+			}
+		}
+		else
+		{
+			WriteLine_W("Open file cancelled");
+		}
+	}
+	
+	UpdateOpenFileDialog(&app->openFileDialog);
 	
 	OC_UiSetContext(&platform->ui);
 	OC_CanvasContextSelect(platform->canvasContext);
@@ -71,6 +108,8 @@ void AppUpdateAndRender()
 	OC_TextFill(8, ScreenSize.height - 8, PrintInArenaStr(scratch, "Orca Version: %s", ORCA_VERSION));
 	
 	OC_UiDraw();
+	
+	RenderOpenFileDialog(&app->openFileDialog);
 	
 	OC_CanvasRender(platform->renderer, platform->canvasContext, platform->surface);
 	OC_CanvasPresent(platform->renderer, platform->surface);

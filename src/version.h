@@ -11,6 +11,6 @@ Date:   09\22\2024
 #define APP_VERSION_MINOR 1
 
 //NOTE: Auto-incremented by a python script before each build
-#define APP_VERSION_BUILD 11
+#define APP_VERSION_BUILD 47
 
 #endif //  _VERSION_H
